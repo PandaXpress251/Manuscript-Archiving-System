@@ -1,0 +1,186 @@
+﻿/* General Container */
+.home-container {
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 100%;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+/* Hero Section Styling */
+.hero-section {
+    background: #ffffff;
+    padding: 30px;
+    color: #003366; /* Dark blue color for better readability */
+    text-align: center;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hero-title {
+    font-size: 2.4em;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.hero-description {
+    font-size: 1.2em;
+    max-width: 700px;
+    margin: 0 auto;
+    margin-bottom: 15px;
+}
+
+/* Search Form Styling */
+.search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 25px;
+    padding: 8px;
+    max-width: 100%;
+    width: 700px;
+    box-shadow: 0 0 8px rgba(0, 51, 102, 0.15);
+}
+
+.minimal-dropdown {
+    padding: 10px;
+    font-size: 1em;
+    border: none;
+    border-radius: 25px 0 0 25px;
+    min-width: 140px;
+    outline: none;
+    background-color: #e9ecef;
+    color: #003366;
+}
+
+.search-input {
+    padding: 10px;
+    font-size: 1em;
+    border: none;
+    flex-grow: 2;
+    border-radius: 0;
+    outline: none;
+    background-color: #e9ecef;
+    color: #003366;
+}
+
+.btn-search {
+    background-color: #ffffff;
+    color: #003366;
+    border: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 0 25px 25px 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+    .btn-search:hover {
+        background-color: #003366;
+        color: #ffffff;
+    }
+
+/* Dropdown Filters Styling */
+.dropdown-filters {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    flex-wrap: wrap;
+}
+
+.compact-dropdown {
+    padding: 8px;
+    font-size: 1em;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #003366;
+    outline: none;
+    min-width: 140px;
+}
+
+/* Manuscript Table Styling */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.manuscript-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+    .manuscript-table th, .manuscript-table td {
+        padding: 15px;
+        border: 1px solid #ddd;
+        text-align: left;
+        font-size: 1em;
+    }
+
+    .manuscript-table th {
+        background: #003366;
+        color: #ffffff;
+        font-weight: 600;
+    }
+
+    .manuscript-table td {
+        background: #ffffff;
+    }
+
+    .manuscript-table .btn-group {
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+    }
+
+.btn-group .btn {
+    padding: 10px;
+    font-size: 0.9em;
+    min-width: 90px;
+    transition: transform 0.2s;
+}
+
+    .btn-group .btn:hover {
+        transform: scale(1.05);
+    }
+
+/* General Adjustments */
+.card {
+    padding: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .input-group,
+    .dropdown-filters {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .hero-title {
+        font-size: 1.8em;
+    }
+
+    .hero-description {
+        font-size: 0.9em;
+    }
+
+    .manuscript-table th, .manuscript-table td {
+        padding: 10px;
+        font-size: 0.9em;
+    }
+}

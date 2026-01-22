@@ -1,0 +1,255 @@
+html {
+  font-size: 5px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.modal-title {
+    font-weight: bold;
+}
+
+.dl-horizontal dt {
+    text-align: left;
+    font-weight: bold;
+}
+
+
+
+
+
+
+
+/*Style for Generating report  ||*/
+
+
+.container-fluid {
+    background-color: #f9fafc;
+}
+
+.card {
+    border-radius: 12px;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #e8f1ff;
+}
+
+.table thead th {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+}
+.card-header {
+    background-color:#07568f;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.display-4 {
+    font-size: 2.5rem;
+}
+
+.input-group-text {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.form-select + .btn {
+    margin-left: 8px; /* Adjust the space as needed */
+}
+
+
+
+
+
+
+
+/* New Styles Specific to the Landing Page */
+
+.landing-page {
+    background-color: #f9fafc;
+}
+
+    /* Modern Search Bar */
+    .landing-page .search-bar {
+        text-align: center;
+        padding: 2rem 0;
+    }
+
+        .landing-page .search-bar input[type="search"] {
+            width: 80%;
+            max-width: 600px;
+            padding: 12px 24px;
+            font-size: 1.25rem;
+            border-radius: 50px;
+            border: none;
+            background-color: #e8f1ff;
+            color: #333;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+            .landing-page .search-bar input[type="search"]::placeholder {
+                color: #888;
+            }
+
+    /* Suggested Folders Section */
+    .landing-page .suggested-folders {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .landing-page .suggested-folder {
+        width: 120px;
+        padding: 15px;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #333;
+        background-color: #e8f1ff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+    }
+
+        .landing-page .suggested-folder:hover {
+            transform: scale(1.05);
+        }
+
+    /* Table and Card Styling */
+    .landing-page .card {
+        border-radius: 12px;
+    }
+
+    .landing-page .table-hover tbody tr:hover {
+        background-color: #e8f1ff;
+    }
+
+    .landing-page .table thead th {
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 600;
+    }
+
+    .landing-page .card-header {
+        background-color: #07568f;
+        color: #fff;
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+
+    /* Sticky Header */
+    .landing-page .sticky-top {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background-color: #f9fafc;
+        padding-bottom: 1rem;
+    }
+
+    /* Dropdown Buttons */
+    .landing-page .dropdown-toggle {
+        border-radius: 50px;
+        padding: 0.5rem 1rem;
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    /* Content Section with Scroll */
+    .landing-page .content-section {
+        max-height: calc(100vh - 300px);
+        overflow-y: auto;
+        padding: 1rem 0;
+    }
+
+/* Scope all styles to only apply within the manuscript-form container */
+.manuscript-form {
+    max-width: 1000px;
+}
+
+    .manuscript-form .form-control-lg {
+        padding: 1.2rem;
+    }
+
+    .manuscript-form .form-label {
+        font-weight: 500;
+        color: #333;
+    }
+
+    .manuscript-form .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(0, 0, 255, .05);
+    }
+
+    .manuscript-form .table-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .manuscript-form .btn-outline-primary {
+        color: #007bff;
+        border-color: #007bff;
+    }
+
+        .manuscript-form .btn-outline-primary:hover {
+            color: white;
+            background-color: #007bff;
+        }
+
+    .manuscript-form .btn-primary {
+        background-color: #0056b3;
+        border: none;
+    }
+
+        .manuscript-form .btn-primary:hover {
+            background-color: #004494;
+        }
+
+    .manuscript-form h4 {
+        color: #333;
+    }
+
+/* Autocomplete dropdown styling */
+.ui-autocomplete {
+    width: 30%; /* Ensures it matches the width of the input */
+    max-width: none; /* Removes any max-width restrictions */
+    box-sizing: border-box; /* Ensures it aligns with padding and border */
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    z-index: 1000;
+}
+
+.ui-menu-item {
+    padding: 10px 16px;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #333;
+    font-weight: 500;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+    .ui-menu-item:hover {
+        background-color: #e9f5ff;
+    }
+
+.ui-helper-hidden-accessible {
+    display: none;
+}
+
+
