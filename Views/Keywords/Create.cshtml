@@ -1,0 +1,26 @@
+﻿@model Thesis_Capstone_Archive.Models.Keyword
+
+<div class="container py-4">
+    <div class="card shadow border-0 mx-auto" style="max-width: 500px;">
+        <div class="card-body">
+            <form id="createForm" asp-action="Create">
+                <!-- Validation summary at the top for general form validation -->
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <!-- Input field for KeywordName -->
+                <div class="mb-3">
+                    <label asp-for="KeywordName" class="form-label fw-bold">Keyword Name</label>
+                    <input asp-for="KeywordName" class="form-control" aria-label="Keyword Name" placeholder="Enter keyword name" />
+                    <span asp-validation-for="KeywordName" class="text-danger"></span>
+                </div>
+
+                <!-- Button Group -->
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

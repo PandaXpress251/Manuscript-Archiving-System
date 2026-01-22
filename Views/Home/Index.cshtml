@@ -1,0 +1,293 @@
+﻿@model IEnumerable<Thesis_Capstone_Archive.Models.Manuscript>
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Home Page";
+}
+
+<link rel="stylesheet" href="~/css/Home.css" />
+
+
+<div class="home-container container-fluid">
+    <div class="hero-section w-100">
+        <h1 class="hero-title">Welcome to Manuscripts Archive</h1>
+        <p class="hero-description">Easily search and discover manuscripts.</p>
+
+        <form method="get" asp-action="Index" class="search-form">
+            <!-- Search Bar with Filters -->
+            <div class="search-bar-container">
+                <div class="input-group enhanced-pill">
+                    <select id="searchBySelect" name="searchBy" class="minimal-dropdown">
+                        <option value="Title">Title</option>
+                        <option value="Keywords">Keywords</option>
+                    </select>
+                    <input type="hidden" id="currentSearchBy" value="@ViewBag.SearchBy" />
+                    <input type="text" name="searchString" value="@ViewBag.CurrentFilter" class="search-input enhanced-search-input" placeholder="Search manuscripts by title or keywords...">
+                    <button type="submit" class="btn-search enhanced-btn-search">Search</button>
+                </div>
+            </div>
+
+            <!-- Dropdown Filters -->
+            <div class="dropdown-filters compact-filters">
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- Programs Dropdown Filter -->
+                        <select name="programId" class="form-select compact-input compact-dropdown" aria-label="Filter by Program">
+                            <option value="">--Select Program or Strand--</option>
+                            @foreach (var item in ViewBag.AcademicPrograms as IEnumerable<SelectListItem>)
+                            {
+                                bool isSelected = item.Value == ViewBag.CurrentProgram?.ToString();
+                                @if (isSelected)
+                                {
+                                    <option value="@item.Value" selected>@item.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Terms Dropdown Filter -->
+                        <select name="termId" class="form-select compact-input compact-dropdown" aria-label="Filter by Term">
+                            <option value="">--Select Terms--</option>
+                            @foreach (var item in ViewBag.Terms as IEnumerable<SelectListItem>)
+                            {
+                                bool isSelected = item.Value == ViewBag.CurrentTerm?.ToString();
+                                @if (isSelected)
+                                {
+                                    <option value="@item.Value" selected>@item.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6 mt-3">       
+                        <!-- System Type Dropdown Filter -->
+                        <select name="systemTypeId" class="form-select compact-input compact-dropdown" aria-label="Filter by System Type">
+                            <option value="">--Select System Types (For CCS Only)--</option>
+                            @foreach (var item in ViewBag.SystemTypes as IEnumerable<SelectListItem>)
+                            {
+                                bool isSelected = item.Value == ViewBag.CurrentSystemType?.ToString();
+                                @if (isSelected)
+                                {
+                                    <option value="@item.Value" selected>@item.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <!-- System Category Dropdown Filter -->
+                        <select name="systemCategoryId" class="form-select compact-input compact-dropdown" aria-label="Filter by System Category">
+                            <option value="">--Select System Categories (For CCS Only)--</option>
+                            @foreach (var item in ViewBag.SystemCategories as IEnumerable<SelectListItem>)
+                            {
+                                bool isSelected = item.Value == ViewBag.CurrentSystemCategory?.ToString();
+                                @if (isSelected)
+                                {
+                                    <option value="@item.Value" selected>@item.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="manuscript-list-section card shadow border-0 rounded-4 w-100">
+    <div class="card-body p-0">
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-wrapper">
+                <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                    <table class="table table-sm table-hover align-middle manuscript-table" id="manuscriptsTable" style="font-size: 0.85rem;">
+                        <thead class="table-header position-sticky" style="top: 0; background: white; z-index: 2;">
+                            <tr>
+                                <th scope="col" style="padding: 0.5rem;">Title</th>
+                                <th scope="col" style="padding: 0.5rem;">View(s)</th>
+                                <th scope="col" style="padding: 0.5rem;">System Type</th>
+                                <th scope="col" style="padding: 0.5rem;">System Category</th>
+                                <th scope="col" style="padding: 0.5rem;">Program or Strand</th>
+                                <th scope="col" style="padding: 0.5rem;">Authors</th>
+                                <th scope="col" style="padding: 0.5rem;" class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <label for="entriesSelect" class="mb-0">Show</label>
+                                    <select id="entriesSelect" class="form-select form-select-sm" style="width: auto;">
+                                        <option value="5">5</option>
+                                        <option value="10" selected>10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                    </select>
+                                    <span>entries</span>
+                                </div>
+                            </div>
+                        <tbody>
+                                @foreach (var item in Model)
+                                {
+                                <tr class="table-row-custom">
+                                    <td style="padding: 0.5rem;">@Html.DisplayFor(modelItem => item.Title)</td>
+                                    <td style="padding: 0.5rem;">@Html.DisplayFor(modelItem => item.ViewCount)</td>
+                                    <td style="padding: 0.5rem;">@Html.DisplayFor(modelItem => item.SystemType.SystemTypeName)</td>
+                                    <td style="padding: 0.5rem;">@Html.DisplayFor(modelItem => item.SystemCategory.SystemCategoryName)</td>
+                                    <td style="padding: 0.5rem;">@Html.DisplayFor(modelItem => item.AcademicProgram.ProgramName)</td>
+                                    @if(item.Authors.Any())
+                                    {
+                                        <td style="padding: 0.5rem;">
+                                                @foreach (var author in item.Authors)
+                                                {
+                                                <span class="badge bg-primary me-1">@author.LastName @author.FirstName</span>
+                                                }
+                                        </td>
+                                        }
+                                        else
+                                        {
+                                        <td style="padding: 0.5rem;">No authors listed</td>
+                                    }
+
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center align-items-center gap-2">
+                                            <!-- View Button -->
+                                            <a asp-action="ViewDocument"
+                                               asp-controller="Home"
+                                               asp-route-id="@item.ManuscriptID"
+                                               target="_blank"
+                                               class="btn btn-sm btn-primary rounded-pill shadow-sm"
+                                               title="View Document">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+
+                                            <!-- Info Button -->
+                                            <button type="button"
+                                                    class="btn btn-info rounded-pill btn-sm shadow-sm"
+                                                    title="More Info"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#detailsModal"
+                                                    onclick="loadDetails('@item.ManuscriptID')">
+                                                <i class="fa fa-info-circle"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pagination Controls -->
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <div id="tableInfo" class="text-muted"></div>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination mb-0" id="pagination"></ul>
+                </nav>
+            </div>
+        }
+        else
+        {
+            <p class="text-center no-manuscripts-message">No manuscripts found. Please refine your search or filter criteria.</p>
+        }
+    </div>
+</div>
+
+<!-- Details Modal -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-body p-4" id="detailsModalContent">
+            <p class="text-center text-muted">Loading...</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const currentSearchBy = document.getElementById("currentSearchBy")?.value;
+            const searchSelect = document.getElementById("searchBySelect");
+            if (currentSearchBy && searchSelect) 
+            {
+                searchSelect.value = currentSearchBy;
+            }
+        });
+
+        function loadDetails(manuscriptId) {
+            $('#detailsModal .modal-body').html('<p class="text-center text-muted">Loading...</p>');
+            $.ajax({
+                url: '@Url.Action("Details", "Home")',
+                type: 'GET',
+                data: { id: manuscriptId },
+                success: function (result) {
+                    $('#detailsModal .modal-body').html(result);
+                    $('#detailsModal').modal('show');
+                },
+                error: function () {
+                    $('#detailsModal .modal-body').html('<p class="text-danger">Failed to load details.</p>');
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            const $rows = $('#manuscriptsTable tbody tr');
+            const $pagination = $('#pagination');
+            const $tableInfo = $('#tableInfo');
+            const $entriesSelect = $('#entriesSelect');
+            let entriesPerPage = parseInt($entriesSelect.val());
+            let currentPage = 1;
+            let filteredRows = $rows;
+
+            function renderTable() {
+                const totalEntries = filteredRows.length;
+                const totalPages = Math.ceil(totalEntries / entriesPerPage);
+                const startIdx = (currentPage - 1) * entriesPerPage;
+                const endIdx = Math.min(startIdx + entriesPerPage, totalEntries);
+                $rows.hide();
+                filteredRows.slice(startIdx, endIdx).show();
+
+                $pagination.empty();
+                if (totalPages > 1) {
+                    for (let i = 1; i <= totalPages; i++) {
+                        $pagination.append(`<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link rounded-circle mx-1" href="#" data-page="${i}">${i}</a></li>`);
+                    }
+                }
+
+                if (totalEntries > 0) {
+                    $tableInfo.text(`Showing ${startIdx + 1} to ${endIdx} of ${totalEntries} entries`);
+                } else {
+                    $tableInfo.text('No matching records found');
+                }
+            }
+
+            $pagination.on('click', '.page-link', function (e) {
+                e.preventDefault();
+                currentPage = parseInt($(this).data('page'));
+                renderTable();
+            });
+
+            $entriesSelect.on('change', function () {
+                entriesPerPage = parseInt($(this).val());
+                currentPage = 1;
+                renderTable();
+            });
+
+            renderTable();
+        });
+    </script>
+}

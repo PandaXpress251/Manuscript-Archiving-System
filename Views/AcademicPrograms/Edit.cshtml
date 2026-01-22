@@ -1,0 +1,51 @@
+﻿@model Thesis_Capstone_Archive.Models.AcademicProgram
+
+
+<div class="container py-4">
+
+  <div class="card shadow border-0 mx-auto" style="max-width: 500px;">
+
+        <div class="modal-body" >
+            <form id="editForm" method="post" action="/AcademicPrograms/Edit/@Model.ProgramID">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="editProgramID" name="ProgramID" value="@Model.ProgramID">
+
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label for="editProgramName" class="form-label fw-bold">Program Name</label>
+                    <textarea id="editProgramName" name="ProgramName" class="form-control rounded-3 shadow-sm" required aria-labelledby="ProgramName">@Model.ProgramName</textarea>
+                    <span asp-validation-for="ProgramName" class="text-danger"></span>
+                </div>
+
+               
+                <!-- Button Group -->
+                <div class="d-grid gap-2">
+                    <button type="submit" id="saveButton" class="btn btn-primary">
+                        Save changes
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                   
+                </div>
+            </form>
+        </div>
+
+  </div>
+
+</div>
+   
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            $('#editForm').on('submit', function () {
+                const saveButton = $('#saveButton');
+                saveButton.prop('disabled', true);
+                saveButton.html('Saving... <i class="fa fa-spinner fa-spin"></i>');
+            });
+        });
+    </script>
+}

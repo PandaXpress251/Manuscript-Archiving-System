@@ -1,0 +1,271 @@
+﻿@model Thesis_Capstone_Archive.Models.Manuscript
+
+@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #2c2c2c;
+            color: white;
+        }
+
+        #toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            background-color: #3a3a3a;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+            #toolbar button,
+            #toolbar input {
+                background-color: #555;
+                color: white;
+                border: none;
+                padding: 8px 10px;
+                margin: 0 5px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+                #toolbar button:hover,
+                #toolbar input:hover {
+                    background-color: #777;
+                }
+
+            #toolbar input {
+                width: 200px;
+            }
+
+        #pdf-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+            height: calc(100vh - 59px); /* Account for the sticky toolbar */
+        }
+
+        canvas {
+            margin-bottom: 20px;
+            border: 1px solid #444;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        .highlight {
+            background-color: yellow;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+ 
+    <div id="main-content">
+        <div id="toolbar">
+            <div style="display: flex; align-items: center;">
+                <button id="zoom-out">Zoom-out -</button>
+                <button id="zoom-in">Zoom-in +</button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <input type="text" id="search-input" placeholder="Search text..." />
+                <button id="search-btn">Search</button>
+                <button id="prev-btn" disabled>Previous</button>
+                <button id="next-btn" disabled>Next</button>
+            </div>
+        </div>
+
+        <div id="pdf-container"></div>
+    </div>
+
+    <script type="module">
+        import * as pdfjsLib from '/lib/pdfjs/build/pdf.mjs';
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '/lib/pdfjs/build/pdf.worker.mjs';
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const pdfUrl = '@ViewData["FilePath"]'; // Path to your uploaded PDF file
+            const container = document.getElementById('pdf-container');
+            let pdfDoc = null;
+            let scale = 1.5; // Initial scale
+            let textContent = []; // Array to store text for each page
+            const matches = []; // Array to store matches
+            let currentMatchIndex = -1; // Index for navigating matches
+            const MAX_SCALE = 5.0;
+            const MIN_SCALE = 0.5;
+
+            // Load the PDF document
+            const loadingTask = pdfjsLib.getDocument(pdfUrl);
+            loadingTask.promise.then(function (pdf) {
+                pdfDoc = pdf;
+                extractTextForSearch(); // Extract text for search
+                renderPages();
+            }).catch(function (error) {
+                console.error('Error loading PDF: ', error);
+            });
+
+            // Function to render all pages
+            function renderPages() {
+                container.innerHTML = ''; // Clear the container
+
+                for (let pageNumber = 1; pageNumber <= pdfDoc.numPages; pageNumber++) {
+                    pdfDoc.getPage(pageNumber).then(function (page) {
+                        const viewport = page.getViewport({ scale: scale });
+                        const canvas = document.createElement('canvas');
+                        container.appendChild(canvas);
+
+                        const ctx = canvas.getContext('2d');
+                        canvas.width = viewport.width;
+                        canvas.height = viewport.height;
+
+                        const renderContext = {
+                            canvasContext: ctx,
+                            viewport: viewport,
+                        };
+
+                        page.render(renderContext).promise.then(function () {
+                            console.log('Page ' + pageNumber + ' rendered');
+                        });
+                    });
+                }
+            }
+
+            // Extract text content for all pages
+            function extractTextForSearch() {
+                for (let pageNumber = 1; pageNumber <= pdfDoc.numPages; pageNumber++) {
+                    pdfDoc.getPage(pageNumber).then(function (page) {
+                        page.getTextContent().then(function (textContentObj) {
+                            const pageText = textContentObj.items.map(item => item.str).join(' ');
+                            textContent[pageNumber - 1] = pageText;
+                        });
+                    });
+                }
+            }
+
+            // Search functionality
+            document.getElementById('search-btn').addEventListener('click', function () {
+                const searchTerm = document.getElementById('search-input').value.trim();
+                if (!searchTerm) {
+                    alert("Please enter a search term.");
+                    return;
+                }
+
+                matches.length = 0; // Reset matches
+                currentMatchIndex = -1;
+
+                // Search through all extracted text
+                for (let i = 0; i < textContent.length; i++) {
+                    const pageText = textContent[i];
+                    if (pageText) {
+                        const regex = new RegExp(searchTerm, 'gi');
+                        let match;
+                        while ((match = regex.exec(pageText)) !== null) {
+                            matches.push({ page: i + 1, index: match.index, term: match[0] });
+                        }
+                    }
+                }
+
+                if (matches.length > 0) {
+                    alert(`Found ${matches.length} matches.`);
+                    currentMatchIndex = 0;
+                    navigateToMatch(currentMatchIndex);
+                    toggleNavigationButtons(true);
+                } else {
+                    alert("Text not found.");
+                    toggleNavigationButtons(false);
+                }
+            });
+
+            // Function to navigate to a specific match
+            function navigateToMatch(matchIndex) {
+                const match = matches[matchIndex];
+                if (!match) return;
+
+                const { page } = match;
+
+                // Scroll to the page
+                const canvas = container.querySelectorAll('canvas')[page - 1];
+                if (canvas) {
+                    canvas.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+
+            // Navigation controls
+            document.getElementById('next-btn').addEventListener('click', function () {
+                if (matches.length === 0) return;
+                currentMatchIndex = (currentMatchIndex + 1) % matches.length;
+                navigateToMatch(currentMatchIndex);
+            });
+
+            document.getElementById('prev-btn').addEventListener('click', function () {
+                if (matches.length === 0) return;
+                currentMatchIndex = (currentMatchIndex - 1 + matches.length) % matches.length;
+                navigateToMatch(currentMatchIndex);
+            });
+
+            // Toggle navigation buttons
+            function toggleNavigationButtons(enabled) {
+                document.getElementById('next-btn').disabled = !enabled;
+                document.getElementById('prev-btn').disabled = !enabled;
+            }
+
+            // Zoom controls
+            document.getElementById('zoom-in').addEventListener('click', function () {
+                if (scale < MAX_SCALE) {
+                    scale += 0.2;
+                    renderPages();
+                }
+            });
+
+            document.getElementById('zoom-out').addEventListener('click', function () {
+                if (scale > MIN_SCALE) {
+                    scale -= 0.2;
+                    renderPages();
+                }
+            });
+
+
+            document.addEventListener('keydown', function (e) {
+                // Ctrl+S or Cmd+S
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+                    e.preventDefault();
+                    alert("Saving is disabled.");
+                }
+
+                // Ctrl+P or Cmd+P
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p') {
+                    e.preventDefault();
+                    alert("Printing is disabled.");
+                }
+
+                 if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
+                    e.preventDefault();
+                    alert("Use the Provided found in the interface.");
+                }
+
+                                 if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'u') {
+                    e.preventDefault();
+                    alert("Sig binuang diha, Imong nawng programmer.");
+                }
+            });
+           
+
+            // Adjust scale dynamically on window resize
+            window.addEventListener('resize', () => {
+                if (pdfDoc) renderPages();
+            });
+        });
+    </script>
+</body>
+</html>

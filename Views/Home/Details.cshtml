@@ -1,0 +1,61 @@
+﻿@model Thesis_Capstone_Archive.Models.Manuscript
+@{
+    var manuscriptkeywords = Model.ManuscriptKeywords.ToList();
+}
+<div class="modal-content">
+           
+    <div class="modal-body">
+        <h4 class="fw-bold text-primary">More Information</h4>
+        <hr />
+            <div class="row mb-3">
+                   
+
+                <div class="col-md-6">
+                    <strong>@Html.DisplayNameFor(model => model.PublicationDate):</strong>
+                    <p>@Html.DisplayFor(model => model.PublicationDate)</p>
+                </div>
+                   
+                <div class="col-md-6">
+                    <strong>@Html.DisplayNameFor(model => model.Adviser):</strong>
+                    <p>@Html.DisplayFor(model => model.Adviser)</p>
+                </div>
+                  
+                <div class="col-md-6">
+                    <strong>@Html.DisplayNameFor(model => model.Term):</strong>
+                    <p>@Html.DisplayFor(model => model.Term.TermName)</p>
+                </div>
+                   
+            </div>
+               
+             
+            <div class="col-md-6">
+                <h4 class="fw-bold text-primary">Keywords</h4>
+                <hr />
+                <div>
+                    @if (Model.ManuscriptKeywords != null && manuscriptkeywords.Count > 0)
+                    {
+                        <ul class="list-group">
+                            @foreach (var manuscriptKeyword in manuscriptkeywords)
+                            {
+                                <li class="list-group-item">
+                                    <i class="fa fa-tag me-2"></i>@manuscriptKeyword.Keyword.KeywordName
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No keywords listed.</p>
+                    }
+                </div>
+            </div>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">
+            <i class="fa fa-times me-2"></i>Close
+        </button>
+    </div>
+</div>
+
+
