@@ -1,0 +1,76 @@
+﻿@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var username = HttpContextAccessor.HttpContext.Session.GetString("Username");
+
+    var firstName = HttpContextAccessor.HttpContext.Session.GetString("FirstName");
+
+    var lastName = HttpContextAccessor.HttpContext.Session.GetString("LastName");
+
+    var role = HttpContextAccessor.HttpContext.Session.GetString("Role");
+}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - Thesis_Capstone_Archive</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/Home.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/fontawesome/css/all.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <button class="btn btn-light text-dark float-end" data-bs-toggle="modal" data-bs-target="#loginModal" style="margin-left:1300px;">Login</button>
+            </div>
+
+        </nav>
+
+        @if (!string.IsNullOrEmpty(username))
+
+        {
+            <!-- User Info Section -->
+            <div class="user-info mt-3 mb-4" style="margin-left: 30px">
+                <i class="fa fa-user-circle me-2"></i>
+                <span>Welcome,@role  @firstName @lastName</span>
+            </div>
+        }
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-info">
+                    @TempData["Message"]
+                </div>
+            }
+
+            @Html.Partial("_LoginModal")
+            @Html.Partial("_ChangePasswordModal")
+
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <script src="~/js/login.js"></script>
+    <script src="~/lib/pdfjs/build/pdf.mjs"></script>
+    <script src="~/lib/pdfjs/build/pdf.worker.mjs"></script>
+
+    <script src="~/js/changePassword.js"></script>
+
+
+
+  
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

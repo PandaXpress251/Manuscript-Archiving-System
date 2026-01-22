@@ -1,0 +1,57 @@
+﻿<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg rounded-4 border-0">
+            <!-- Modal Header -->
+            <div class="modal-header text-white rounded-top-4" style="background-color:#003366;">
+                <h5 class="modal-title fw-bold" id="loginModalLabel">Portal Access</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body py-4 px-5">
+                <div class="text-center mb-4">
+          
+                </div>
+                <form id="loginForm" method="post">
+                    <!-- Username Field -->
+                    <div class="mb-3">
+                        <label for="username" class="form-label fw-bold">Username</label>
+                        <input type="text" id="username" name="username" class="form-control rounded-3 shadow-sm" placeholder="Enter your username" required>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label fw-bold">Password</label>
+                        <input type="password" id="password" name="password" class="form-control rounded-3 shadow-sm" placeholder="Enter your password" required>
+                        <div class="form-text text-muted">Do not share your password.</div>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" class="btn btn-primary rounded-pill w-100 shadow-sm">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </button>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer justify-content-center bg-light rounded-bottom-4">
+                <small class="text-muted">Access restricted to authorized personnel only.</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="login.js"></script>
+
+
+<script>
+    // Add event listener for when the modal is shown
+    var loginModal = document.getElementById('loginModal');
+
+    loginModal.addEventListener('shown.bs.modal', function () {
+        // Clear the input fields when the modal is shown
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+    });
+</script>

@@ -1,0 +1,38 @@
+﻿@model Thesis_Capstone_Archive.Models.SystemCategory
+
+<div class="container">
+        <div class="card-body">
+            <form id="createForm" asp-action="Create">
+                <!-- Validation summary at the top for general form validation -->
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <!-- Input field for SystemCategoryName -->
+                <div class="mb-3">
+                    <label asp-for="SystemCategoryName" class="form-label fw-bold">System Category Name</label>
+                    <input asp-for="SystemCategoryName" class="form-control" aria-label="System Category Name" placeholder="Enter system category name"/>
+                    <span asp-validation-for="SystemCategoryName" class="text-danger"></span>
+                </div>
+
+                <!-- Textarea for Description -->
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label fw-bold">Description</label>
+                    <textarea asp-for="Description" class="form-control" rows="4" aria-label="Description" placeholder="Enter description"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <!-- Button Group -->
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

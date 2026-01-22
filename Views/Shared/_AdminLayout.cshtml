@@ -1,0 +1,220 @@
+﻿@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var username = HttpContextAccessor.HttpContext.Session.GetString("Username");
+
+    var firstName = HttpContextAccessor.HttpContext.Session.GetString("FirstName");
+
+    var lastName = HttpContextAccessor.HttpContext.Session.GetString("LastName");
+
+    var role = HttpContextAccessor.HttpContext.Session.GetString("Role");
+
+
+
+    var ID = HttpContextAccessor.HttpContext.Session.GetInt32("UserID");
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ACT-IEF Library</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/fontawesome/css/all.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/sidebar.css" asp-append-version="true" />
+</head>
+<body style="background-image: url('/wwwroot/img/logo_old.png'); background-size: cover; background-position: center; background-repeat: no-repeat; height: 100%; margin: 0;">
+    <nav class="sidebar">
+        <button class="toggle-btn" aria-label="Toggle Sidebar">
+            <i class="fa-solid fa-angles-right"></i>
+        </button>
+        <header>
+            <div class="brand-container">
+                <a class="brand-link">
+                    <div class="brand-logo">
+                        <img src="~/img/logo_old.png" alt="ACTIEF Logo" width="48">
+                    </div>
+                    <div class="brand-text">
+                        <h1>ACT-IEF Library</h1>
+                        <span>Manuscripts Archiving System</span>
+                    </div>
+                </a>
+            </div>
+        </header>
+
+        <style>
+
+            body.bg-image {
+                background-image: url('/wwwroot/img/logo_old.png'); /* Replace with your image URL */
+                background-size: cover; /* Ensure the image covers the entire body */
+                background-position: center; /* Center the image */
+                background-repeat: no-repeat; /* Prevent image repetition */
+                height: 100%; /* Ensure the body takes full height */
+                margin: 0; /* Remove any default margins */
+            }
+        </style>
+
+
+        <div class="sidebar-content">
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    @if (role == "Admin")
+
+                    {
+                        <!-- Admin can see these links -->
+                        <li class="nav-item @(HttpContextAccessor.HttpContext.Request.Path.StartsWithSegments("/Users") ? "active" : "")"
+                            data-tooltip="Manage Accounts">
+                            <a asp-controller="Users" asp-action="Index" class="nav-link">
+                                <i class="fa-solid fa-user"></i>
+                                <span>Manage Accounts</span>
+                            </a>
+                        </li>
+                    }
+
+                    <li class="nav-item @(HttpContextAccessor.HttpContext.Request.Path.StartsWithSegments("/Manuscripts") ? "active" : "")"
+                        data-tooltip="Manage Manuscripts">
+                        <a asp-controller="Manuscripts" asp-action="Index" class="nav-link">
+                            <i class="fa-solid fa-file"></i>
+                            <span>Manage Manuscripts</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="nav-link dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#metadataManagement">
+                            <i class="fa-solid fa-layer-group"></i>
+                            <span>Manage Metadata</span>
+                            <i class="fa-solid fa-chevron-down ms-auto"></i>
+                        </button>
+                        <div class="collapse show" id="metadataManagement">
+                            <ul class="nav-list nested">
+                                <li class="nav-item @(HttpContextAccessor.HttpContext.Request.Path.StartsWithSegments("/SystemTypes") ? "active" : "")"
+                                    data-tooltip="System Types">
+                                    <a asp-controller="SystemTypes" asp-action="Index" class="nav-link">
+                                        <i class="fa-solid fa-bars-progress"></i>
+                                        <span>System Types</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item @(HttpContextAccessor.HttpContext.Request.Path.StartsWithSegments("/SystemCategories") ? "active" : "")"
+                                    data-tooltip="Categories">
+                                    <a asp-controller="SystemCategories" asp-action="Index" class="nav-link">
+                                        <i class="fa-solid fa-layer-group"></i>
+                                        <span>System Categories</span>
+                                    </a>
+                                </li>
+                                @if (role == "Admin")
+
+                                {
+                                    <!-- Only Admin can see this link -->
+                                    <li class="nav-item @(HttpContextAccessor.HttpContext.Request.Path.StartsWithSegments("/Terms") ? "active" : "")"
+                                        data-tooltip="Terms">
+                                        <a asp-controller="Terms" asp-action="Index" class="nav-link">
+                                            <i class="fa-solid fa-calendar-days"></i>
+                                            <span>Terms</span>
+                                        </a>
+                                    </li>
+                                }
+                                <li class="nav-item @(HttpContextAccessor.HttpContext.Request.Path.StartsWithSegments("/AcademicPrograms") ? "active" : "")"
+                                    data-tooltip="Programs">
+                                    <a asp-controller="AcademicPrograms" asp-action="Index" class="nav-link">
+                                        <i class="fa-solid fa-table-list"></i>
+                                        <span>Programs</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item @(HttpContextAccessor.HttpContext.Request.Path.StartsWithSegments("/Keywords") ? "active" : "")"
+                                    data-tooltip="Keywords">
+                                    <a asp-controller="Keywords" asp-action="Index" class="nav-link">
+                                        <i class="fa-solid fa-tags"></i>
+                                        <span>Keywords</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="nav-item @(HttpContextAccessor.HttpContext.Request.Path.StartsWithSegments("/Admin") ? "active" : "")"
+                        data-tooltip="Reports">
+                        <a asp-controller="Admin" asp-action="Reports" class="nav-link">
+                            <i class="fa-solid fa-clipboard"></i>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+          
+        </div>
+    </nav>
+
+
+
+   
+        <main class="main-content">
+            <nav class="navbar navbar-expand-lg bg-white shadow-sm p-2 d-flex align-items-center">
+                <!-- User Info and Logout Section -->
+                <div class="ms-auto d-flex align-items-center">
+                    @if (!string.IsNullOrEmpty(username))
+
+                    {
+                        <!-- User Info Section -->
+                        <div class="user-info me-4">
+                            <i class="fa fa-user-circle me-2"></i>
+                            <span> @firstName @lastName</span>
+                        </div>
+                    }
+
+                    <form asp-action="Logout" asp-controller="Account" style="display: inline;">
+                        <button type="submit" class="btn btn-outline-secondary">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                </div>
+            </nav>
+
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-info">
+                    @TempData["Message"]
+                </div>
+            }
+
+            <div class="content-wrapper">
+                <div class="container-fluid">
+                    @RenderBody()
+                </div>
+            </div>
+        </main>
+
+
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const sidebar = document.querySelector('.sidebar');
+            const toggleBtn = document.querySelector('.toggle-btn');
+
+            // Restore sidebar state
+            const sidebarState = localStorage.getItem('sidebarState');
+            if (sidebarState === 'collapsed') {
+                sidebar.classList.add('collapsed');
+            }
+
+            // Toggle sidebar
+            toggleBtn?.addEventListener('click', () => {
+                sidebar.classList.toggle('collapsed');
+                localStorage.setItem('sidebarState',
+                    sidebar.classList.contains('collapsed') ? 'collapsed' : 'expanded');
+            });
+        });
+    </script>
+</body>
+</html>

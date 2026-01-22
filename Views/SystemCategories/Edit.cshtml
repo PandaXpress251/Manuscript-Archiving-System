@@ -1,0 +1,55 @@
+﻿@model Thesis_Capstone_Archive.Models.SystemCategory
+
+<div class="container">
+  
+        <div class="modal-body">
+            <form id="editForm" method="post" action="/SystemCategories/Edit/@Model.SystemCategoryID">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="editSystemCategoryID" name="SystemCategoryID" value="@Model.SystemCategoryID">
+
+                <!-- Validation summary at the top for general form validation -->
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <!-- Input field for SystemCategoryName -->
+                <div class="mb-3">
+                    <label for="editSystemCategoryName" class="form-label fw-bold">System Category Name</label>
+                    <input type="text" id="editSystemCategoryName" name="SystemCategoryName" value="@Model.SystemCategoryName" class="form-control rounded-3 shadow-sm" required aria-labelledby="SystemCategoryName">
+                    <span asp-validation-for="SystemCategoryName" class="text-danger"></span>
+                </div>
+
+                <!-- Textarea for Description -->
+                <div class="mb-3">
+                    <label for="editDescription" class="form-label fw-bold">Description</label>
+                    <textarea id="editDescription" name="Description" class="form-control rounded-3 shadow-sm" rows="4" required aria-labelledby="Description">@Model.Description</textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <!-- Button Group -->
+                <div class="d-grid gap-2">
+                    <button type="submit" id="saveButton" class="btn btn-primary">
+                        Save changes
+                    </button>
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            $('#editForm').on('submit', function () {
+                const saveButton = $('#saveButton');
+                saveButton.prop('disabled', true);
+                saveButton.html('Saving... <i class="fa fa-spinner fa-spin"></i>');
+            });
+        });
+    </script>
+}

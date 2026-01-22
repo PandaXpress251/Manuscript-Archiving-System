@@ -1,0 +1,44 @@
+﻿@model Thesis_Capstone_Archive.Models.Term
+
+<div class="container py-4">
+    <div class="card shadow border-0 mx-auto" style="max-width: 500px;">
+        <div class="card-body">
+            <h1 class="text-primary mb-4">Add New Term</h1>
+            <form id="createForm" asp-action="Create">
+                <!-- Validation summary at the top for general form validation -->
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <!-- Input field for TermName -->
+                <div class="mb-3">
+                    <label asp-for="TermName" class="form-label fw-bold">Term Name</label>
+                    <input asp-for="TermName" class="form-control" aria-label="Term Name" placeholder="Enter term name" />
+                    <span asp-validation-for="TermName" class="text-danger"></span>
+                </div>
+
+                <!-- Input field for StartYear -->
+                <div class="mb-3">
+                    <label asp-for="StartYear" class="form-label fw-bold">Start Year</label>
+                    <input asp-for="StartYear" class="form-control" type="month" aria-label="Start Year" />
+                    <span asp-validation-for="StartYear" class="text-danger"></span>
+                </div>
+
+                <!-- Input field for EndYear -->
+                <div class="mb-3">
+                    <label asp-for="EndYear" class="form-label fw-bold">End Year</label>
+                    <input asp-for="EndYear" class="form-control" type="month" aria-label="End Year" />
+                    <span asp-validation-for="EndYear" class="text-danger"></span>
+                </div>
+
+                <!-- Button Group -->
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,248 @@
+﻿@model Thesis_Capstone_Archive.Models.ViewModels.ManuscriptEditViewModel
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Edit Manuscript";
+}
+
+<div class="container my-5">
+    <h1 class="text-primary mb-4">Edit Manuscript</h1>
+
+    <form asp-action="Edit" enctype="multipart/form-data" method="post">
+        @Html.HiddenFor(model => model.ManuscriptID)
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+        <div class="row g-4">
+            <!-- Left Column -->
+            <div class="col-md-6">
+                <div class="form-floating mb-4">
+                    <input asp-for="Title" class="form-control" id="titleInput" placeholder="Enter manuscript title">
+                    <label for="titleInput">Enter manuscript title</label>
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input asp-for="Adviser" class="form-control" id="adviserInput" placeholder="Enter adviser's name">
+                    <label for="adviserInput">Enter adviser's name</label>
+                    <span asp-validation-for="Adviser" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <select asp-for="SystemTypeID" asp-items="Model.SystemTypes" class="form-select" id="systemTypeSelect">
+                        <option value="">Select a system type</option>
+                    </select>
+                    <label for="systemTypeSelect">System type</label>
+                    <span asp-validation-for="SystemTypeID" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <select asp-for="SystemCategoryID" asp-items="Model.SystemCategories" class="form-select" id="systemCategorySelect">
+                        <option value="">Select a system category</option>
+                    </select>
+                    <label for="systemCategorySelect">System category</label>
+                    <span asp-validation-for="SystemCategoryID" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <select asp-for="ProgramID" asp-items="Model.AcademicProgram" class="form-select" id="programSelect">
+                        <option value="">Select a program</option>
+                    </select>
+                    <label for="programSelect">Program</label>
+                    <span asp-validation-for="ProgramID" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <select asp-for="TermID" asp-items="Model.Terms" class="form-select" id="termSelect">
+                        <option value="">Select a term</option>
+                    </select>
+                    <label for="termSelect">Term</label>
+                    <span asp-validation-for="TermID" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <label class="form-label">Current Manuscript File</label>
+                    <div class="mb-2">
+                        <span>@Model.ManusFile?.FileName </span>
+                    </div>
+                    <label class="form-label">Upload New Manuscript File (optional)</label>
+                    <input asp-for="NewManusFile" type="file" class="form-control form-control-lg rounded-2" accept=".pdf" data-val="false" />
+                    <span asp-validation-for="NewManusFile" class="text-danger"></span>
+                </div>
+
+               @*  <div class="mb-4">
+                    <label class="form-label">Current Abstract File</label>
+                    <div class="mb-2">
+                        <span>@Model.AbstractFile?.FileName</span>
+                    </div>
+                    <label class="form-label">Upload New Abstract File (optional)</label>
+                    <input asp-for="NewAbstractFile" type="file" class="form-control form-control-lg rounded-2" accept=".pdf" data-val="false" />
+                    <span asp-validation-for="NewAbstractFile" class="text-danger"></span>
+                </div> *@
+
+                <!-- Keywords Section -->
+                <div class="card p-4 mb-4">
+                    <h4 class="text-dark mb-4 fw-bold">Keywords</h4>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="keywordInput" placeholder="Enter a keyword">
+                        <button type="button" id="addKeywordBtn" class="btn btn-primary">Add</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="keywordsTable">
+                            <thead>
+                                <tr>
+                                    <th>Keyword</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="keywordsList">
+                                @foreach (var keyword in Model.Keywords)
+                                {
+                                    <tr>
+                                        <td>@keyword</td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-sm removeKeywordBtn">Remove</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Authors Section -->
+                <div class="card p-4">
+                    <h4 class="text-dark mb-4 fw-bold">Authors</h4>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="authorFirstName" placeholder="First name">
+                                <label for="authorFirstName">Firstname</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="authorLastName" placeholder="Last name">
+                                <label for="authorLastName">Lastname</label>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" id="addAuthorBtn" class="btn btn-primary rounded-2">Add Author</button>
+                    <div class="table-responsive mt-3">
+                        <table class="table table-bordered" id="authorsTable">
+                            <thead>
+                                <tr>
+                                    <th>Firstname</th>
+                                    <th>Lastname</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="authorsList">
+                                @foreach (var author in Model.Authors)
+                                {
+                                    <tr>
+                                        <td>@author.FirstName</td>
+                                        <td>@author.LastName</td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger btn-sm removeAuthorBtn">Remove</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <button type="submit" class="btn btn-primary btn-lg rounded-2 px-5" id="submitBtn">
+                Update Manuscript
+                <span id="submitSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @Html.Partial("_ValidationScriptsPartial")
+
+    <script>
+        $(document).ready(function () {
+            // File validation: Only PDF files allowed
+            $('input[type="file"]').change(function () {
+                const file = this.files[0];
+                if (file && file.type !== "application/pdf") {
+                    alert("Only PDF files are allowed.");
+                    this.value = ""; // Clear the invalid input
+                }
+            });
+
+            // Add Keyword
+            $('#addKeywordBtn').click(function () {
+                const keyword = $('#keywordInput').val().trim();
+                if (keyword) {
+                    $.post('/Manuscripts/AddKeyword', { keyword }, function (response) {
+                        $('#keywordsList').append(`
+                            <tr>
+                                <td>${response.keyword}</td>
+                                <td><button type="button" class="btn btn-danger btn-sm removeKeywordBtn">Remove</button></td>
+                            </tr>
+                        `);
+                        $('#keywordInput').val('');
+                    });
+                }
+            });
+
+            // Add Author
+            $('#addAuthorBtn').click(function () {
+                const firstName = $('#authorFirstName').val().trim();
+                const lastName = $('#authorLastName').val().trim();
+                if (firstName && lastName) {
+                    $.post('/Manuscripts/AddAuthor', { firstName, lastName }, function (newAuthor) {
+                        $('#authorsList').append(`
+                            <tr>
+                                <td>${newAuthor.firstName}</td>
+                                <td>${newAuthor.lastName}</td>
+                                <td><button type="button" class="btn btn-danger btn-sm removeAuthorBtn">Remove</button></td>
+                            </tr>
+                        `);
+                        $('#authorFirstName').val('');
+                        $('#authorLastName').val('');
+                    });
+                }
+            });
+
+            // Remove Keyword
+          
+            $(document).on('click', '.removeKeywordBtn', function () {
+                const row = $(this).closest('tr');
+                const keyword = row.find('td:first').text();
+
+                // Remove the row from the table
+                row.remove();
+
+                // Save to session using AJAX
+                $.post('/Manuscripts/RemoveKeyword', { keyword: keyword });
+            });
+
+            // Remove Author
+            $(document).on('click', '.removeAuthorBtn', function () {
+                const row = $(this).closest('tr');
+                const firstName = row.find('td:first').text();
+                const lastName = row.find('td:nth-child(2)').text();
+                $.post('/Manuscripts/RemoveAuthor', { firstName, lastName }, function () {
+                    row.remove();
+                });
+            });
+
+            // Show loading spinner on form submission
+            $('form').submit(function () {
+                $('#submitSpinner').removeClass('d-none');
+                $('#submitBtn').attr('disabled', true);
+            });
+        });
+    </script>
+}

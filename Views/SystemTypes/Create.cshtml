@@ -1,0 +1,37 @@
+﻿@model Thesis_Capstone_Archive.Models.SystemType
+
+<div class="container">
+            <form id="createForm" asp-action="Create">
+                <!-- Validation summary at the top for general form validation -->
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <!-- Input field for SystemTypeName -->
+                <div class="mb-3">
+                    <label asp-for="SystemTypeName" class="form-label fw-bold">System Type Name</label>
+                    <input asp-for="SystemTypeName" class="form-control" aria-label="System Type Name" placeholder="Enter system type name"/>
+                    <span asp-validation-for="SystemTypeName" class="text-danger"></span>
+                </div>
+
+                <!-- Textarea for Description -->
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label fw-bold">Description</label>
+                    <textarea asp-for="Description" class="form-control" rows="4" aria-label="Description" placeholder="Enter description" ></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <!-- Button Group -->
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                   
+                </div>
+            </form>
+
+    </div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,27 @@
+﻿@model Thesis_Capstone_Archive.Models.SystemType
+
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h5 class="modal-title text-primary" id="systemTypeModalLabel">System Type Decription:</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body bg-light p-4 rounded shadow-sm">
+            <div class="modal-body-content mt-3">
+                <p class="text-justify fs-5" style="line-height: 1.6;">
+                   @Model.Description
+                </p>
+            </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer text-center">
+            <!-- Optional footer content, if needed -->
+        </div>
+
+    </div>
+</div>

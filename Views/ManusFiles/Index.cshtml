@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Thesis_Capstone_Archive.Models.ManusFile>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FileName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FilePath)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FileName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FilePath)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ManusFileID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ManusFileID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ManusFileID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,91 @@
+﻿@model Thesis_Capstone_Archive.Models.Manuscript
+@{
+    var authors = Model.Authors.ToList();
+    var manuscriptKeywords = Model.ManuscriptKeywords.ToList();
+}
+        <div class="modal-content">
+            
+            <div class="modal-body">
+                <h4 class="fw-bold text-primary">Basic Information</h4>
+                <hr />
+                <div class="row mb-3">
+                  
+                    <div class="col-md-6">
+                        <strong>@Html.DisplayNameFor(model => model.SystemType):</strong>
+                        <p>@Html.DisplayFor(model => model.SystemType.SystemTypeName)</p>
+                    </div>
+
+                    <div class="col-md-6">
+                        <strong>@Html.DisplayNameFor(model => model.Adviser):</strong>
+                        <p>@Html.DisplayFor(model => model.Adviser)</p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>@Html.DisplayNameFor(model => model.SystemCategory):</strong>
+                        <p>@Html.DisplayFor(model => model.SystemCategory.SystemCategoryName)</p>
+                    </div>
+
+                   
+                   
+                    <div class="col-md-6">
+                        <strong>@Html.DisplayNameFor(model => model.ViewCount):</strong>
+                        <p>@Html.DisplayFor(model => model.ViewCount)</p>
+                    </div>
+
+
+                   
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h4 class="fw-bold text-primary">Authors</h4>
+                        <hr />
+                        <div>
+                            @if (Model.Authors != null && authors.Count > 0)
+                            {
+                                <ul class="list-group">
+                                    @foreach (var author in authors)
+                                    {
+                                        <li class="list-group-item">
+                                    <i class="fa fa-user me-2"></i>@author.LastName @author.FirstName
+                                </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <p class="text-muted">No authors listed.</p>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h4 class="fw-bold text-primary">Keywords</h4>
+                        <hr />
+                        <div>
+                            @if (Model.ManuscriptKeywords != null && manuscriptKeywords.Count > 0)
+                            {
+                                <ul class="list-group">
+                                    @foreach (var manuscriptKeyword in manuscriptKeywords)
+                                    {
+                                        <li class="list-group-item">
+                                            <i class="fa fa-tag me-2"></i>@manuscriptKeyword.Keyword.KeywordName
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <p class="text-muted">No keywords listed.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">
+                    <i class="fa fa-times me-2"></i>Close
+                </button>
+            </div>
+        </div>
+
+

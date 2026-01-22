@@ -1,0 +1,326 @@
+﻿@model Thesis_Capstone_Archive.Models.ViewModels.ManuscriptUploadViewModel
+
+@{
+    Layout = "_AdminLayout";
+
+    ViewData["Title"] = "Upload";
+}
+
+<div class="container my-3">
+    <h1 class="text-primary mb-4">Upload Manuscript</h1>
+
+    <form asp-action="Create" enctype="multipart/form-data" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+
+                <div class="form-floating mb-4">
+                    <select asp-for="ProgramID" class="form-select" id="programSelect">
+                        <option value="">Select a program</option>
+                        @foreach (var item in Model.AcademicProgram)
+
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                    <label for="programSelect">Program</label>
+                    <span asp-validation-for="ProgramID" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input asp-for="Title" class="form-control" id="titleInput" placeholder="Enter manuscript title">
+                    <label for="titleInput">Enter manuscript title</label>
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <input asp-for="Adviser" class="form-control" id="adviserInput" placeholder="Enter adviser's name">
+                    <label for="adviserInput">Enter adviser's name</label>
+                    <span asp-validation-for="Adviser" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <select asp-for="SystemTypeID" class="form-select" id="systemTypeSelect">
+                        <option value="">Select a system type</option>
+                        @foreach (var item in Model.SystemTypes)
+
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                    <label for="systemTypeSelect">System type (For CCS Only) </label>
+                    <span asp-validation-for="SystemTypeID" class="text-danger"></span>
+                    <small class="text-muted d-block mt-2"><i class="fas fa-info-circle me-1" data-bs-toggle="tooltip" title="Select a system type to see the description"></i><span id="systemTypeTooltip">Select a system type to see the description</span></small>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <select asp-for="SystemCategoryID" class="form-select" id="systemCategorySelect">
+                        <option value="">Select a system category</option>
+                        @foreach (var item in Model.SystemCategories)
+
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                    <label for="systemCategorySelect">System category (For CCS Only)</label>
+                    <span asp-validation-for="SystemCategoryID" class="text-danger"></span>
+                    <small class="text-muted d-block mt-2"><i class="fas fa-info-circle me-1" data-bs-toggle="tooltip" title="Select a system category to see the description"></i><span id="systemCategoryTooltip">Select a system category to see the description</span></small>
+                </div>
+
+              
+
+                <div class="form-floating mb-4">
+                    <select asp-for="TermID" class="form-select" id="termSelect">
+                        <option value="">Select a term</option>
+                        @foreach (var item in Model.Terms)
+
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                    <label for="termSelect">Term</label>
+                    <span asp-validation-for="TermID" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <label class="form-label">Upload Manuscript File (.pdf File Only)</label>
+                    <input asp-for="ManusFile" type="file" class="form-control form-control-lg rounded-2" accept=".pdf" />
+                    <span asp-validation-for="ManusFile" class="text-danger"></span>
+                </div>
+
+                <div class="card p-4 mb-4">
+                    <h4 class="text-dark mb-4 fw-bold">Keywords</h4>
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="keywordInput" placeholder="Enter a keyword">
+                        <button type="button" id="addKeywordBtn" class="btn btn-primary">Add</button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="keywordsTable">
+                            <thead>
+                                <tr>
+                                    <th>Keyword</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="keywordsList">
+                                <tr class="no-keywords">
+                                    <td colspan="2" class="text-center">No keywords added yet</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card p-4">
+                    <h4 class="text-dark mb-4 fw-bold">Authors</h4>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="authorFirstName" placeholder="First name">
+                                <label for="authorFirstName">Firstname</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="authorLastName" placeholder="Last name" />
+                                <label for="authorLastName">Lastname</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" id="addAuthorBtn" class="btn btn-primary rounded-2">Add Author</button>
+
+                    <div class="table-responsive mt-3">
+                        <table class="table table-bordered" id="authorsTable">
+                            <thead>
+                                <tr>
+                                    <th>Firstname</th>
+                                    <th>Lastname</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="authorsList">
+                                <tr class="no-authors">
+                                    <td colspan="3" class="text-center">No authors added yet</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <button type="submit" class="btn btn-primary btn-lg rounded-2 px-5" id="submitBtn">
+                Submit Manuscript
+                <span id="submitSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+            </button>
+        </div>
+    </form>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Enable Bootstrap tooltips
+            $('[data-bs-toggle="tooltip"]').tooltip();
+
+            // Autocomplete for Keywords
+            $("#keywordInput").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '@Url.Action("GetKeywords", "Manuscripts")',
+                        data: { term: request.term },
+                        success: function (data) {
+                            response(data);
+                        }
+                    });
+                },
+                minLength: 1,
+                select: function (event, ui) {
+                    $("#keywordInput").val(ui.item.value);
+                    return false;
+                }
+            });
+
+            // Convert C# dictionary to JavaScript objects
+            var systemTypeDescriptions = @Html.Raw(Json.Serialize(ViewBag.SystemTypeDescriptions));
+            var systemCategoryDescriptions = @Html.Raw(Json.Serialize(ViewBag.SystemCategoryDescriptions));
+
+            // Update System Type Tooltip
+            $('#systemTypeSelect').change(function () {
+                var selectedValue = $(this).val();
+                var description = "Select a system type to see the description";
+
+                if (selectedValue && systemTypeDescriptions[selectedValue]) {
+                    description = systemTypeDescriptions[selectedValue];
+                }
+
+                $('#systemTypeTooltip').text(description);
+            });
+
+            // Update System Category Tooltip
+            $('#systemCategorySelect').change(function () {
+                var selectedValue = $(this).val();
+                var description = "Select a system category to see the description";
+
+                if (selectedValue && systemCategoryDescriptions[selectedValue]) {
+                    description = systemCategoryDescriptions[selectedValue];
+                }
+
+                $('#systemCategoryTooltip').text(description);
+            });
+
+            // Add Keyword AJAX
+            $('#addKeywordBtn').click(function () {
+                var keyword = $('#keywordInput').val().trim();
+                if (keyword) {
+                    $.ajax({
+                        url: '@Url.Action("AddKeyword", "Manuscripts")',
+                        method: 'POST',
+                        data: { keyword: keyword },
+                        success: function (data) {
+                            $('#keywordsList .no-keywords').remove();
+                            $('#keywordsList').append('<tr><td>' + data.keyword + '</td><td><button class="btn btn-danger btn-sm removeKeywordBtn">Remove</button></td></tr>');
+                            $('#keywordInput').val('');
+                            // updateKeywordCount();
+                        },
+                        error: function (xhr) {
+                            alert("Error adding keyword: " + xhr.responseText);
+                        }
+                    });
+                } else {
+                    alert('Keyword is required.');
+                }
+            });
+
+            // Add Author AJAX
+            $('#addAuthorBtn').click(function () {
+                var firstName = $('#authorFirstName').val().trim();
+                var lastName = $('#authorLastName').val().trim();
+
+                if (firstName && lastName) {
+                    $.ajax({
+                        url: '@Url.Action("AddAuthor", "Manuscripts")',
+                        method: 'POST',
+                        data: {
+                            firstName: firstName,
+                            lastName: lastName
+                        },
+                        success: function (data) {
+                            $('#authorsList .no-authors').remove();
+                            $('#authorsList').append('<tr><td>' + data.firstName + '</td><td>' + data.lastName + '</td><td><button class="btn btn-danger btn-sm removeAuthorBtn">Remove</button></td></tr>');
+                            $('#authorFirstName').val('');
+                            $('#authorLastName').val('');
+                            // updateAuthorCount();
+                        },
+                        error: function (xhr) {
+                            alert("Error adding author: " + xhr.responseText);
+                        }
+                    });
+                } else {
+                    alert('Both First Name and Last Name are required.');
+                }
+            });
+
+            // Remove Keyword
+            $(document).on('click', '.removeKeywordBtn', function () {
+                $(this).closest('tr').remove();
+                if ($('#keywordsList tr').length === 0) {
+                    $('#keywordsList').append('<tr class="no-keywords"><td colspan="2" class="text-center">No keywords added yet</td></tr>');
+                }
+                // updateKeywordCount();
+            });
+
+            // Remove Author
+            $(document).on('click', '.removeAuthorBtn', function () {
+                $(this).closest('tr').remove();
+                if ($('#authorsList tr').length === 0) {
+                    $('#authorsList').append('<tr class="no-authors"><td colspan="3" class="text-center">No authors added yet</td></tr>');
+                }
+                // updateAuthorCount();
+            });
+
+            // Show loading spinner on form submission
+            $('form').on('submit', function (e) {
+                e.preventDefault(); // Prevent default to manually handle submission
+
+                $('#submitSpinner').removeClass('d-none');
+                $('#submitBtn').attr('disabled', true);
+
+                var form = $(this)[0];
+                var formData = new FormData(form); // Create FormData object to handle file uploads
+
+                $.ajax({
+                    type: form.getAttribute('method'),
+                    url: form.getAttribute('action'),
+                    data: formData,
+                    contentType: false, // Needed for FormData
+                    processData: false, // Prevent jQuery from processing data
+                    success: function () {
+                        // Redirect to Index page on success
+                        alert('Successfully Uploaded the Manuscript. Status: Archived');
+                        window.location.href = '@Url.Action("Index", "Manuscripts")';
+                    },
+                    error: function () {
+                        // Re-enable the button and hide the spinner if there's an error
+                        alert('Error submitting form. Review the fill-up form and try again.');
+                        $('#submitSpinner').addClass('d-none');
+                        $('#submitBtn').attr('disabled', false);
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,31 @@
+﻿@model Thesis_Capstone_Archive.Models.SystemCategory
+
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h4 class="text-primary" id="systemCategoryModalLabel">System Category Description:</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <!-- Modal Body Content -->
+        <div class="modal-body bg-light p-4 rounded shadow-sm">
+            <!-- Modal Content -->
+            <div class="modal-body-content mt-3">
+                <dl class="row">
+                    <dt class="col-sm-3">Description:</dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.Description)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer text-center">
+            <!-- Optional footer content, if needed -->
+        </div>
+
+    </div>
+</div>

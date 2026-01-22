@@ -1,0 +1,59 @@
+﻿@model Thesis_Capstone_Archive.Models.Term
+
+<div class="container py-4">
+    <div class="card shadow border-0 mx-auto" style="max-width: 500px;">
+        <div class="modal-body">
+            <form id="editForm" method="post" action="/Terms/Edit/@Model.TermID">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="editTermID" name="TermID" value="@Model.TermID">
+
+                <!-- Validation summary at the top for general form validation -->
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <!-- Input field for TermName -->
+                <div class="mb-3">
+                    <label for="editTermName" class="form-label fw-bold">Term Name</label>
+                    <input type="text" id="editTermName" name="TermName" value="@Model.TermName" class="form-control rounded-3 shadow-sm" required aria-labelledby="TermName">
+                    <span asp-validation-for="TermName" class="text-danger"></span>
+                </div>
+
+                <!-- Input field for StartYear -->
+                <div class="mb-3">
+                    <label for="editStartYear" class="form-label fw-bold">Start Year</label>
+                    <input type="month" id="editStartYear" name="StartYear" value="@Model.StartYear.ToString("yyyy-MM")" class="form-control rounded-3 shadow-sm" required aria-labelledby="StartYear">
+                    <span asp-validation-for="StartYear" class="text-danger"></span>
+                </div>
+
+                <!-- Input field for EndYear -->
+                <div class="mb-3">
+                    <label for="editEndYear" class="form-label fw-bold">End Year</label>
+                    <input type="month" id="editEndYear" name="EndYear" value="@Model.EndYear.ToString("yyyy-MM")" class="form-control rounded-3 shadow-sm" required aria-labelledby="EndYear">
+                    <span asp-validation-for="EndYear" class="text-danger"></span>
+                </div>
+
+                <!-- Button Group -->
+                <div class="d-grid gap-2">
+                    <button type="submit" id="saveButton" class="btn btn-primary">
+                        Save changes
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                   
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            $('#editForm').on('submit', function () {
+                const saveButton = $('#saveButton');
+                saveButton.prop('disabled', true);
+                saveButton.html('Saving... <i class="fa fa-spinner fa-spin"></i>');
+            });
+        });
+    </script>
+}

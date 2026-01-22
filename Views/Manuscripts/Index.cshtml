@@ -1,0 +1,377 @@
+﻿@model IEnumerable<Thesis_Capstone_Archive.Models.Manuscript>
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Manuscripts Overview";
+
+    var manuscripts = Model.Select(mn => new 
+        { 
+            mn.AcademicProgram,
+            mn.ManuscriptID,
+            mn.PublicationDate,
+            mn.Term,
+            mn.Title
+        }).ToList();
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-9">
+        <div>
+        <h2 class="fw-bold mb-0 " style="color:#003b93;">
+            Manuscripts Overview</h2>
+
+        <p class="text-muted px-2 mb-0">Manage manuscripts and their details</p>
+        </div>
+        <button type="button" class="btn btn-primary rounded-pill shadow-sm d-flex align-items-center" onclick="location.href='@Url.Action("Create", "Manuscripts")'">
+            <i class="fa fa-plus me-2"></i> <span>Upload New Manuscript</span>
+        </button>
+    </div>
+
+
+
+    <div class="input-group mt-4 mb-3" style="max-width: 500px;">
+        <div class="input-group-prepend">
+            <select id="searchBy" class="form-select rounded-start">
+                <option value="Title">Title</option>
+                <option value="Keywords">Keywords</option>
+            </select>
+        </div>
+
+            <!-- Hidden input to store the selected value of 'searchBy' -->
+        <input type="hidden" id="currentSearchBy" value="@ViewBag.SearchBy" />
+        <input type="text" id="searchInput" class="form-control" placeholder="Search by keyword..." value="@ViewBag.CurrentFilter">
+        <button type="button" class="btn btn-primary" id="searchButton">Search</button>
+    </div>
+
+    <div class="row mb-3">
+
+        <div class="col-md-3">
+            <select id="programFilter" class="form-select">
+                <option value="">--Select Program or Strand--</option>
+                @foreach (var item in ViewBag.AcademicPrograms as IEnumerable<SelectListItem>)
+                {
+                    bool isSelected = item.Value == ViewBag.CurrentProgram?.ToString();
+                    @if (isSelected)
+                    {
+                        <option value="@item.Value" selected>@item.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <select id="termFilter" class="form-select">
+                <option value="">--Select Terms--</option>
+                @foreach (var item in ViewBag.Terms as IEnumerable<SelectListItem>)
+                {
+                    bool isSelected = item.Value == ViewBag.CurrentTerm?.ToString();
+                    @if (isSelected)
+                    {
+                        <option value="@item.Value" selected>@item.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3" id="systemTypeContainer">
+            <select id="systemTypeFilter" class="form-select">
+                <option value="">--Select System Types--</option>
+                @foreach (var item in ViewBag.SystemTypes as IEnumerable<SelectListItem>)
+                {
+                    bool isSelected = item.Value == ViewBag.CurrentSystemType?.ToString();
+                    @if (isSelected)
+                    {
+                        <option value="@item.Value" selected>@item.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-3" id="systemCategoryContainer">
+            <select id="systemCategoryFilter" class="form-select">
+                <option value="">--Select System Categories--</option>
+                @foreach (var item in ViewBag.SystemCategories as IEnumerable<SelectListItem>)
+                {
+                    bool isSelected = item.Value == ViewBag.CurrentSystemCategory?.ToString();
+                    @if (isSelected)
+                    {
+                        <option value="@item.Value" selected>@item.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                }
+            </select>
+        </div>
+      
+    </div>
+
+   <div class="card shadow border-0 rounded-4 mt-4">
+    <div class="card-body p-0">
+
+        <!-- "Show Entries" Dropdown (Positioned to the Right and Closer to the Table) -->
+        <div class="d-flex justify-content-end align-items-center mb-2 px-3">
+            <label for="entriesSelect" class="me-2 mb-0">Show Entries:</label>
+            <select id="entriesSelect" class="form-select d-inline-block w-auto">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+        </div>
+
+        @if (Model != null && manuscripts.Count > 0)
+        {
+            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                <table class="table table-hover align-middle mb-0" id="manuscriptsTable">
+                    <thead class="sticky-top" style="background: #0e387c; color: white;">
+                        <tr>
+                            <th scope="col" class="text-uppercase text-white fw-bold">Title</th>
+                            <th scope="col" class="text-uppercase text-white fw-bold">Program</th>
+                            <th scope="col" class="text-uppercase text-white fw-bold">Date Archived</th>
+                            <th scope="col" class="text-uppercase text-white fw-bold">Term</th>
+                            <th scope="col" class="text-uppercase text-white fw-bold text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in manuscripts)
+                        {
+                            <tr class="table-row-custom" >
+                                <td><span class="fw-bold text-dark"> @Html.DisplayFor(modelItem => item.Title)</span></td>
+                                <td>@Html.DisplayFor(modelItem => item.AcademicProgram.ProgramName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.PublicationDate)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Term.TermName) - @Html.DisplayFor(modelItem => item.Term.AcademicYear)</td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center align-items-center gap-1">
+                                            <button type="button" class="btn btn-info rounded-pill btn-sm shadow-sm"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#detailsModal"
+                                                    onclick="loadDetails('@item.ManuscriptID') title="View Details">
+                                                <i class="fa fa-info-circle"></i>
+                                            </button>
+
+                                            <a asp-action="ViewDocument" asp-controller="Home" asp-route-id="@item.ManuscriptID" target="_blank"
+                                               class="btn btn-primary btn-sm rounded-pill shadow-sm" title="View Document">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+
+                                            <a asp-action="Edit" asp-route-id="@item.ManuscriptID"
+                                               class="btn btn-warning rounded-pill btn-sm shadow-sm" title="Update Manuscript Details">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination Controls -->
+            <div class="d-flex justify-content-between align-items-center mt-4 px-3">
+                <div class="text-muted">Page @ViewBag.CurrentPage of @ViewBag.TotalPages</div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item @(ViewBag.HasPreviousPage ? "" : "disabled")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.PreviousPage, searchBy = ViewBag.SearchBy, searchString = ViewBag.CurrentFilter })" tabindex="-1">Previous</a>
+                        </li>
+                        @for (var i = 1; i <= ViewBag.TotalPages; i++)
+                        {
+                            <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { page = i, searchBy = ViewBag.SearchBy, searchString = ViewBag.CurrentFilter })">@i</a>
+                            </li>
+                        }
+                        <li class="page-item @(ViewBag.HasNextPage ? "" : "disabled")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.NextPage, searchBy = ViewBag.SearchBy, searchString = ViewBag.CurrentFilter })">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning text-center my-4 rounded-pill" role="alert">
+                No manuscripts available.
+            </div>
+        }
+    </div>
+</div>
+
+
+</div>
+
+<!-- Details Modal -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-body p-4" id="detailsModalContent">
+            <p class="text-center text-muted">Loading...</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleSystemFilters() {
+            const selectedTermId = $('#programFilter').val(); // get as string
+            const visibleTermIds = ['1', '2', '3', '4', '5'];
+
+            if (visibleTermIds.includes(selectedTermId)) {
+                $('#systemTypeContainer').show();
+                $('#systemCategoryContainer').show();
+            } else {
+                $('#systemTypeFilter').val('');
+                $('#systemCategoryFilter').val('');
+                $('#systemTypeContainer').hide();
+                $('#systemCategoryContainer').hide();
+            }
+        }
+
+        $(document).ready(function () {
+            toggleSystemFilters(); // Initial check
+
+            $('#termFilter').on('change', function () {
+                toggleSystemFilters(); // Recheck when user changes
+            });
+        });
+
+        $(document).ready(function () {
+           // Call on page load
+        toggleSystemFilters();
+
+        // Re-evaluate when term changes
+        $('#termFilter').on('change', function () {
+            toggleSystemFilters();
+        });
+
+            // Pre-fill dropdowns from hidden inputs
+            const currentSearchBy = $('#currentSearchBy').val();
+            if (currentSearchBy) {
+                $('#searchBy').val(currentSearchBy);
+            }
+
+            const currentPageSize = $('#currentPageSize').val();
+            if (currentPageSize) {
+                $('#pageSizeSelect').val(currentPageSize);
+            }
+
+            // Search click
+            $('#searchButton').on('click', function () {
+                const queryParams = {
+                    searchBy: $('#searchBy').val(),
+                    searchString: $('#searchInput').val(),
+                    termId: $('#termFilter').val(),
+                    programId: $('#programFilter').val(),
+                    pageSize: $('#pageSizeSelect').val(),
+                    pageNumber: 1
+                };
+
+                if ($('#systemTypeContainer').is(':visible')) {
+                    queryParams.systemTypeId = $('#systemTypeFilter').val();
+                }
+                if ($('#systemCategoryContainer').is(':visible')) {
+                    queryParams.systemCategoryId = $('#systemCategoryFilter').val();
+                }
+
+                window.location.href = '@Url.Action("Index", "Manuscripts")' + '?' + $.param(queryParams);
+            });
+
+            // Filters change
+            $('#systemTypeFilter, #systemCategoryFilter, #termFilter, #programFilter').on('change', function () {
+                const queryParams = {
+                    searchBy: $('#searchBy').val(),
+                    searchString: $('#searchInput').val(),
+                    termId: $('#termFilter').val(),
+                    programId: $('#programFilter').val(),
+                    pageSize: $('#pageSizeSelect').val(),
+                    pageNumber: 1
+                };
+
+                if ($('#systemTypeContainer').is(':visible')) {
+                    queryParams.systemTypeId = $('#systemTypeFilter').val();
+                }
+                if ($('#systemCategoryContainer').is(':visible')) {
+                    queryParams.systemCategoryId = $('#systemCategoryFilter').val();
+                }
+
+                window.location.href = '@Url.Action("Index", "Manuscripts")' + '?' + $.param(queryParams);
+            });
+
+            // Page size change
+            $('#pageSizeSelect').on('change', function () {
+                const queryParams = {
+                    searchBy: $('#searchBy').val(),
+                    searchString: $('#searchInput').val(),
+                    termId: $('#termFilter').val(),
+                    programId: $('#programFilter').val(),
+                    pageSize: $('#pageSizeSelect').val(),
+                    pageNumber: 1
+                };
+
+                if ($('#systemTypeContainer').is(':visible')) {
+                    queryParams.systemTypeId = $('#systemTypeFilter').val();
+                }
+                if ($('#systemCategoryContainer').is(':visible')) {
+                    queryParams.systemCategoryId = $('#systemCategoryFilter').val();
+                }
+
+                window.location.href = '@Url.Action("Index", "Manuscripts")' + '?' + $.param(queryParams);
+            });
+
+            // Pagination links
+            $(document).on('click', '.pagination a', function (e) {
+                e.preventDefault();
+
+                const pageLink = $(this).attr('href');
+                const queryParams = new URLSearchParams(pageLink.split('?')[1]);
+
+                queryParams.set('searchBy', $('#searchBy').val());
+                queryParams.set('searchString', $('#searchInput').val());
+                queryParams.set('termId', $('#termFilter').val());
+                queryParams.set('programId', $('#programFilter').val());
+                queryParams.set('pageSize', $('#pageSizeSelect').val());
+
+                if ($('#systemTypeContainer').is(':visible')) {
+                    queryParams.set('systemTypeId', $('#systemTypeFilter').val());
+                } else {
+                    queryParams.delete('systemTypeId');
+                }
+
+                if ($('#systemCategoryContainer').is(':visible')) {
+                    queryParams.set('systemCategoryId', $('#systemCategoryFilter').val());
+                } else {
+                    queryParams.delete('systemCategoryId');
+                }
+
+                window.location.href = '@Url.Action("Index", "Manuscripts")' + '?' + queryParams.toString();
+            });
+        });
+
+        function loadDetails(manuscriptId) {
+            $('#detailsModal .modal-body').html('<p class="text-center text-muted">Loading...</p>');
+            $.ajax({
+                url: '@Url.Action("Details", "Manuscripts")',
+                type: 'GET',
+                data: { id: manuscriptId },
+                success: function (result) {
+                    $('#detailsModal .modal-body').html(result);
+                    $('#detailsModal').modal('show');
+                },
+                error: function () {
+                    $('#detailsModal .modal-body').html('<p class="text-danger">Failed to load details.</p>');
+                }
+            });
+        }
+    </script>
+}

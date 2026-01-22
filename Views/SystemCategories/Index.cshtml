@@ -1,0 +1,419 @@
+﻿@model IEnumerable<Thesis_Capstone_Archive.Models.SystemCategory>
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "System Categories Management";
+}
+
+<div class="container-fluid p-4">
+    <div class="content-wrapper">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-0 " style="color:#003b93;">System Categories Management</h2>
+                <p class="text-muted px-1 mb-0">Manage system categories and their description</p>
+            </div>
+            <button type="button" class="btn btn-primary rounded-pill btn-sm d-flex align-items-center"
+                    data-bs-toggle="modal" data-bs-target="#CreateModal" onclick="loadCreateModal()">
+                <i class="fa fa-plus me-2"></i>
+                <span>Add System Category</span>
+            </button>
+        </div>
+
+        <!-- Filters and Search -->
+        <div class="card border-0 rounded-4 shadow-sm mb-4">
+            <div class="card-body">
+                <div class="row g-3 align-items-center">
+                    <div class="col-12 col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-text border-0 bg-light text-secondary">
+                                <i class="fa fa-search"></i>
+                            </span>
+                            <input type="text" id="searchInput" class="form-control border-0 bg-light" style="width:170px;"
+                                   placeholder="Search system categories..." />
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-8 d-flex justify-content-md-end align-items-center gap-3">
+                        <label class="text-dark mb-0 me-2">Show Entries:</label>
+                        <select id="entriesSelect" class="form-select border-0 bg-light" style="width: 80px">
+                            <option value="5" selected>5</option>
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Categories Table -->
+        @if (Model != null && Model.Any())
+        {
+            <div class="card border-0 rounded-4 shadow-sm">
+                <div class="card-body p-0">
+                    <!-- Wrapper to make the table body scrollable -->
+                    <div style="overflow-y: auto; max-height: 455px;">
+                        <table class="table mb-0" id="systemCategoriesTable">
+                            <thead class="sticky-top" style="background: #0e387c; color: white;">
+                                <tr>
+                                    <th class="border-0 px-4 py-3 text-start text-white">
+                                        <span class="fw-semibold">System Category Name</span>
+                                    </th>
+
+                                    <th class="border-0 px-4 py-3 fw-semibold text-center text-white">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var category in Model)
+                                {
+                                    <tr>
+                                        <td class="px-4 py-3 text-start">
+                                            <span>@category.SystemCategoryName</span>
+                                        </td>
+                                      
+                                        <td class="px-4 py-3">
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <button type="button" class="btn btn-warning rounded-pill btn-sm shadow-sm d-flex align-items-center"
+                                                        onclick="loadEditModal('@category.SystemCategoryID')">
+                                                    <i class="fa fa-edit me-1"></i>
+                                                    <span>Update</span>
+                                                </button>
+
+                                                <button type="button" class="btn btn-info rounded-pill btn-sm shadow-sm"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#detailsModal"
+                                                        onclick="loadDetails('@category.SystemCategoryID')">
+                                                    <i class="fa fa-info-circle me-1"></i> Description
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <div id="tableInfo" class="text-dark"></div>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination mb-0" id="pagination"></ul>
+                </nav>
+            </div>
+        }
+        else
+        {
+            <div class="card border-0 rounded-4 shadow-sm">
+                <div class="card-body p-5 text-center">
+                    <div class="mb-4">
+                        <i class="fa fa-folder-open fa-3x text-muted opacity-50"></i>
+                    </div>
+                    <h5 class="mb-2">No System Categories Available</h5>
+                    <p class="text-muted mb-4">Get started by adding your first system category</p>
+                    <button class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#CreateModal" onclick="loadCreateModal()">
+                        Add System Category
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Create Modal Structure -->
+<div class="modal fade" id="CreateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header">
+                <h5 class="modal-title">New System Category <i class="fa fa-plus-circle"></i></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="createModalBody">
+                <!-- Content will be loaded here via AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal Structure -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit System Category Details <i class="fa fa-edit"></i></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="editModalContent">
+                <!-- Content will be loaded here via AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Details Modal -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-lg">
+        <div class="modal-body p-4" id="detailsModalContent">
+            <p class="text-center text-muted">Loading...</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function loadDetails(systemCategoryID) {
+            // Show a loading message before AJAX call completes
+            $('#detailsModal .modal-body').html('<p class="text-center text-muted">Loading...</p>');
+
+            $.ajax({
+                url: '@Url.Action("Details", "SystemCategories")',
+                type: 'GET',
+                data: { id: systemCategoryID },
+                success: function (result) {
+                    $('#detailsModal .modal-body').html(result);
+                    $('#detailsModal').modal('show'); // Show the modal after content is loaded
+                },
+                error: function () {
+                    $('#detailsModal .modal-body').html('<p class="text-danger">Failed to load details.</p>');
+                }
+            });
+        }
+
+        // Function to load the create form in the modal
+        function loadCreateModal() {
+            $('#createModalBody').html('<p class="text-muted">Loading...</p>'); // Show loading message
+            $.ajax({
+                url: '/SystemCategories/Create',
+                type: 'GET',
+                success: function (result) {
+                    $('#createModalBody').html(result);
+                },
+                error: function () {
+                    $('#createModalBody').html('<p class="text-danger">Failed to load the form. Please try again.</p>');
+                }
+            });
+        }
+
+        // AJAX for create form submission
+        $(document).on('submit', '#createForm', function (e) {
+            e.preventDefault();
+            const saveButton = $('#createForm').find('button[type="submit"]');
+            saveButton.prop('disabled', true);
+            saveButton.html('Saving... <i class="fa fa-spinner fa-spin"></i>'); // Add loading spinner to save button
+
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        // Close the modal and reload the page if submission was successful
+                        $('#CreateModal').modal('hide');
+                        location.reload();
+                    } else {
+                        // Reload the form into the modal if validation errors occurred
+                        $('#createModalBody').html(response);
+                        saveButton.prop('disabled', false);
+                        saveButton.html('Create'); // Reset button text
+                    }
+                },
+                error: function () {
+                    alert('An error occurred while submitting the form. Please try again.');
+                    saveButton.prop('disabled', false);
+                    saveButton.html('Create'); // Reset button text
+                }
+            });
+        });
+
+        // Function to load the edit form in the modal
+        function loadEditModal(systemCategoryID) {
+            $('#editModalContent').html('<p class="text-muted">Loading...</p>'); // Show loading message
+            $.ajax({
+                url: '/SystemCategories/Edit/' + systemCategoryID,
+                type: 'GET',
+                success: function (result) {
+                    $('#editModalContent').html(result);
+                    $('#editModal').modal('show');
+                },
+                error: function () {
+                    $('#editModalContent').html('<p class="text-danger">Failed to load system category details. Please try again.</p>');
+                }
+            });
+        }
+
+        // AJAX for edit form submission
+        $(document).on('submit', '#editForm', function (e) {
+            e.preventDefault();
+            const saveButton = $('#editForm').find('button[type="submit"]');
+            saveButton.prop('disabled', true);
+            saveButton.html('Saving... <i class="fa fa-spinner fa-spin"></i>'); // Add loading spinner to save button
+
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        // Close the modal and reload the page if submission was successful
+                        $('#editModal').modal('hide');
+                        location.reload();
+                    } else {
+                        // Reload the form into the modal if validation errors occurred
+                        $('#editModalContent').html(response);
+                        saveButton.prop('disabled', false);
+                        saveButton.html('Save changes'); // Reset button text
+                    }
+                },
+                error: function () {
+                    alert('An error occurred while submitting the form. Please try again.');
+                    saveButton.prop('disabled', false);
+                    saveButton.html('Save changes'); // Reset button text
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            // Initialize tooltips
+            $('[data-bs-toggle="tooltip"]').tooltip({
+                trigger: 'hover',
+                placement: 'top',
+                html: true,
+                template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner" style="font-size: 1.2em;"></div></div>'
+            });
+
+            const $rows = $('#systemCategoriesTable tbody tr');
+            const $pagination = $('#pagination');
+            const $tableInfo = $('#tableInfo');
+            const $entriesSelect = $('#entriesSelect');
+            let currentPage = 1;
+            let entriesPerPage = parseInt($entriesSelect.val());
+            let filteredRows = $rows;
+
+            function renderTable() {
+                const totalEntries = filteredRows.length;
+                const totalPages = Math.ceil(totalEntries / entriesPerPage);
+                const startIdx = (currentPage - 1) * entriesPerPage;
+                const endIdx = Math.min(startIdx + entriesPerPage, totalEntries);
+
+                $rows.hide();
+                filteredRows.slice(startIdx, endIdx).show();
+
+                // Simple pagination
+                $pagination.empty();
+                if (totalPages > 1) {
+                    for (let i = 1; i <= totalPages; i++) {
+                        $pagination.append(`
+                                    <li class="page-item ${i === currentPage ? 'active' : ''}">
+                                        <a class="page-link rounded-circle mx-1" href="#" data-page="${i}">${i}</a>
+                                    </li>
+                                `);
+                    }
+                }
+
+                // Update info text
+                if (totalEntries > 0) {
+                    $tableInfo.text(`Showing ${startIdx + 1} to ${endIdx} of ${totalEntries} entries`);
+                } else {
+                    $tableInfo.text('No matching records found');
+                }
+            }
+
+            $entriesSelect.on('change', function () {
+                entriesPerPage = parseInt($(this).val());
+                currentPage = 1;
+                renderTable();
+            });
+
+            $pagination.on('click', '.page-link', function (e) {
+                e.preventDefault();
+                currentPage = parseInt($(this).data('page'));
+                renderTable();
+            });
+
+            $('#searchInput').on('input', function () {
+                const value = $(this).val().toLowerCase();
+                filteredRows = $rows.filter(function () {
+                    return $(this).text().toLowerCase().includes(value);
+                });
+                currentPage = 1;
+                renderTable();
+            });
+
+            renderTable();
+        });
+    </script>
+}
+
+<style>
+    .form-control:focus,
+    .form-select:focus {
+        box-shadow: none;
+        background-color: #f8f9fa !important;
+    }
+
+    .page-link {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin: 0 2px;
+        border: none;
+        color: #6c757d;
+    }
+
+    .page-item.active .page-link {
+        background-color: #0d6efd;
+    }
+
+    .form-check-input:checked {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+
+    .badge {
+        font-weight: 500;
+    }
+
+    .btn-light {
+        background-color: #f8f9fa;
+        border-color: #f8f9fa;
+    }
+
+        .btn-light:hover {
+            background-color: #e9ecef;
+            border-color: #e9ecef;
+        }
+
+    /* Highlighting table header and rows */
+    table th {
+        background-color: #f1f3f5;
+    }
+
+        table th:hover {
+            background-color: #e2e6ea;
+        }
+
+    table tbody tr {
+        transition: background-color 0.3s;
+    }
+
+        table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+    /* Tooltip Custom Styling */
+    .tooltip-inner {
+        max-width: 300px;
+        padding: 10px;
+        font-size: 1.2em;
+    }
+</style>

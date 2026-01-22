@@ -1,0 +1,53 @@
+﻿@model Thesis_Capstone_Archive.Models.SystemType
+
+<div class="container">
+        <div class="modal-body">
+            <form id="editForm" method="post" action="/SystemTypes/Edit/@Model.SystemTypeID">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="editSystemTypeID" name="SystemTypeID" value="@Model.SystemTypeID">
+
+                <!-- Validation summary at the top for general form validation -->
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <!-- Input field for SystemTypeName -->
+                <div class="mb-3">
+                    <label for="editSystemTypeName" class="form-label fw-bold">System Type Name</label>
+                    <input type="text" id="editSystemTypeName" name="SystemTypeName" value="@Model.SystemTypeName" class="form-control rounded-3 shadow-sm" required aria-labelledby="SystemTypeName">
+                    <span asp-validation-for="SystemTypeName" class="text-danger"></span>
+                </div>
+
+                <!-- Textarea for Description -->
+                <div class="mb-3">
+                    <label for="editDescription" class="form-label fw-bold">Description</label>
+                    <textarea id="editDescription" name="Description" class="form-control rounded-3 shadow-sm" rows="3" required aria-labelledby="Description">@Model.Description</textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <!-- Button Group -->
+                <div class="d-grid gap-2">
+                    <button type="submit" id="saveButton" class="btn btn-primary">
+                        Save changes
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                   
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            $('#editForm').on('submit', function () {
+                const saveButton = $('#saveButton');
+                saveButton.prop('disabled', true);
+                saveButton.html('Saving... <i class="fa fa-spinner fa-spin"></i>');
+            });
+        });
+    </script>
+}

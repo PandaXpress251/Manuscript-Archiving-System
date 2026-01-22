@@ -1,0 +1,62 @@
+﻿@model Thesis_Capstone_Archive.Models.ViewModels.UserEditViewModel
+
+<div class="container py-4">
+    <div class="card shadow border-0 mx-auto" style="max-width: 500px;">
+        <div class="modal-body">
+            <form id="editForm" method="post" action="/Users/Edit/@Model.UserID">
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.UserID)
+
+                <!-- Validation summary -->
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <!-- ID Number -->
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.IDNumber, new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(model => model.IDNumber, new { @class = "form-control rounded-3 shadow-sm", required = "required" })
+                    @Html.ValidationMessageFor(model => model.IDNumber, "", new { @class = "text-danger" })
+                </div>
+
+                <!-- First Name -->
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.FirstName, new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control rounded-3 shadow-sm", required = "required" })
+                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                </div>
+
+                <!-- Last Name -->
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.LastName, new { @class = "form-label fw-bold" })
+                    @Html.TextBoxFor(model => model.LastName, new { @class = "form-control rounded-3 shadow-sm", required = "required" })
+                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                </div>
+
+                <!-- Role -->
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.Role, new { @class = "form-label fw-bold" })
+                    @Html.DropDownListFor(model => model.Role,
+                             new SelectList(
+                             Enum.GetValues(typeof(UserRole))
+                             .Cast<UserRole>()
+                             .Select(r => new { Value = r.ToString(), Text = r.ToString() }),
+                             "Value", "Text", Model.Role
+                             ),
+                             "-- Select Role --",
+                             new { @class = "form-select rounded-3 shadow-sm", required = "required" }
+                             )
+                    @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary" id="saveButton">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Return to list</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
